@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Aaronw7/rpp36-aaron-overview#readme",
   "dependencies": {
     "express": "^4.18.1",
+    "mongoose": "^6.5.1",
     "nodemon": "^2.0.19",
     "postgres": "^3.2.4"
   },
