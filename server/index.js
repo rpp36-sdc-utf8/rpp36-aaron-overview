@@ -1,9 +1,27 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const db = require('../db/index.js');
+const app = express();
+const port = 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hello World! This is my Express Server')
+  db.getProducts()
+  .then(result =>  res.send(result))
+})
+
+app.get('/features', (req, res) => {
+
+})
+
+app.get('/styles', (req, res) => {
+
+})
+
+app.get('/photos', (req, res) => {
+
+})
+
+app.get('/sku', (req, res) => {
+
 })
 
 app.listen(port, () => {

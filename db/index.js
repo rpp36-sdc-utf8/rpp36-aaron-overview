@@ -1,9 +1,8 @@
 const { Pool } = require('pg')
 const pool = new Pool({
-  host: 'local socket',
+  host: 'localhost',
   port: 5432,
-  user: 'root',
-  password: '',
+  user: 'aaronwang',
   database: 'overview'
 })
 // the pool will emit an error on behalf of any idle clients
@@ -13,17 +12,24 @@ pool.on('error', (err, client) => {
   process.exit(-1)
 })
 
-pool
+const getProducts = function() {
+  return pool
   .connect()
   .then(client => {
     return client
-      .query('SELECT * FROM users WHERE id = $1', [1])
+      .query('SELECT * FROM products limit 8')
       .then(res => {
         client.release()
-        console.log(res.rows[0])
+        console.log('RESULTS: ', res.rows)
+        return res.rows;
       })
       .catch(err => {
         client.release()
         console.log(err.stack)
       })
   })
+}
+
+module.exports = {
+  getProducts
+}
