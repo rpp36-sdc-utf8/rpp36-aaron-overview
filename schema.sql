@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS product_features (
 );
 
 COPY product_features FROM '/Users/aaronwang/Desktop/SDC Data/features.csv' csv header;
+CREATE INDEX product_feature ON product_features(product_id);
 
 CREATE TABLE IF NOT EXISTS product_styles (
   id int NOT NULL,
@@ -43,6 +44,8 @@ CREATE TABLE IF NOT EXISTS product_styles (
 );
 
 COPY product_styles FROM '/Users/aaronwang/Desktop/SDC Data/styles.csv' csv header;
+CREATE INDEX product_style ON product_styles(productId);
+
 
 CREATE TABLE IF NOT EXISTS styles_photos (
   id int NOT NULL,
