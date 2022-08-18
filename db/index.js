@@ -30,6 +30,82 @@ const getProducts = function() {
   })
 }
 
+const getFeatures = function(id) {
+  return pool
+  .connect()
+  .then(client => {
+    return client
+      .query(`SELECT * FROM product_features where product_id = ${id} limit 5`)
+      .then(res => {
+        client.release()
+        console.log('RESULTS: ', res.rows)
+        return res.rows;
+      })
+      .catch(err => {
+        client.release()
+        console.log(err.stack)
+      })
+  })
+}
+
+const getStyles = function(id) {
+  return pool
+  .connect()
+  .then(client => {
+    return client
+      .query(`SELECT * FROM product_styles where productId = ${id} limit 5`)
+      .then(res => {
+        client.release()
+        console.log('RESULTS: ', res.rows)
+        return res.rows;
+      })
+      .catch(err => {
+        client.release()
+        console.log(err.stack)
+      })
+  })
+}
+
+const getPhotos = function(id) {
+  return pool
+  .connect()
+  .then(client => {
+    return client
+      .query(`SELECT * FROM styles_photos where styleId = ${id} limit 5`)
+      .then(res => {
+        client.release()
+        console.log('RESULTS: ', res.rows)
+        return res.rows;
+      })
+      .catch(err => {
+        client.release()
+        console.log(err.stack)
+      })
+  })
+}
+
+const getSku = function(id) {
+  return pool
+  .connect()
+  .then(client => {
+    return client
+      .query(`SELECT * FROM styles_sku where styleId = ${id} limit 5`)
+      .then(res => {
+        client.release()
+        console.log('RESULTS: ', res.rows)
+        return res.rows;
+      })
+      .catch(err => {
+        client.release()
+        console.log(err.stack)
+      })
+  })
+}
+
 module.exports = {
-  getProducts
+  getProducts,
+  getFeatures,
+  getStyles,
+  getPhotos,
+  getSku
 }

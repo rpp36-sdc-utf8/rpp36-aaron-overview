@@ -59,6 +59,8 @@ CREATE TABLE IF NOT EXISTS styles_photos (
 );
 
 COPY styles_photos FROM '/Users/aaronwang/Desktop/SDC Data/photos.csv' csv header;
+CREATE INDEX style_photo ON styles_photos(styleId);
+
 
 CREATE TABLE IF NOT EXISTS styles_sku (
   id int NOT NULL,
@@ -72,3 +74,4 @@ CREATE TABLE IF NOT EXISTS styles_sku (
 );
 
 COPY styles_sku FROM '/Users/aaronwang/Desktop/SDC Data/skus.csv' csv header;
+CREATE INDEX style_sku ON styles_sku(styleId);
