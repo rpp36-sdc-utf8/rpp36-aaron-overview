@@ -52,6 +52,24 @@ const getProductId = function(id) {
 }
 
 /*
+      SELECT products.id AS product_id,
+      json_agg(
+        json_build_object(
+          'style_id', product_styles.id,
+          'name', product_styles.name,
+          'original_price', product_styles.original_price,
+          'sale_price', product_styles.sale_price,
+          'default?', product_styles.default_style
+          )
+        )
+      AS results
+      FROM products
+      JOIN product_styles ON products.id = ${id} AND product_styles.productid = products.id
+      JOIN styles_photos ON styles_photos.styleid = product_styles.id
+      GROUP BY products.id
+*/
+
+/*
       SELECT product_styles.id AS style_id, name, original_price, sale_price, default_style AS "default?",
       json_agg(json_build_object('thumbnail_url', styles_photos.thumbnail_url, 'url', styles_photos.url)) AS photos,
       json_agg(json_build_object('feature', product_features.feature)) AS features
@@ -67,9 +85,26 @@ const getProductStyles = function(id) {
   .then(client => {
     return client
       .query(`
-      SELECT products.id AS product_id
-      FROM products
-      WHERE products.id = ${id}
+      SELECT
+      product_styles.id AS style_id,
+      name,
+      original_price,
+      sale_price,
+      default_style AS "default?",
+      (
+        SELECT json_agg(photos_url)
+        FROM (
+          SELECT
+          thumbnail_url,
+          url
+          FROM styles_photos
+          WHERE styles_photos.styleid = product_styles.id
+          ) AS photos_url
+      ) AS photos,
+      json_object_agg(styles_sku.id, json_build_object('quantity', styles_sku.quantity, 'size', styles_sku.size)) AS skus
+      FROM product_styles
+      JOIN styles_sku ON styles_sku.styleid = product_styles.id AND product_styles.productid = ${id}
+      GROUP BY product_styles.id
       `)
       .then(res => {
         client.release()
@@ -105,7 +140,7 @@ const getStyles = function(id) {
   .connect()
   .then(client => {
     return client
-      .query(`SELECT * FROM product_styles WHERE productId = ${id} limit 5`)
+      .query(`SELECT * FROM product_styles WHERE productId = ${id}`)
       .then(res => {
         client.release()
         return res.rows;
@@ -139,7 +174,7 @@ const getSku = function(id) {
   .connect()
   .then(client => {
     return client
-      .query(`SELECT * FROM styles_sku WHERE styleId = ${id} limit 5`)
+      .query(`SELECT * FROM styles_sku WHERE styleId = ${id}`)
       .then(res => {
         client.release()
         return res.rows;
