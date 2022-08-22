@@ -42,7 +42,7 @@ const getProductId = function(id) {
       `)
       .then(res => {
         client.release()
-        return res.rows;
+        return res.rows[0];
       })
       .catch(err => {
         client.release()
@@ -86,30 +86,38 @@ const getProductStyles = function(id) {
     return client
       .query(`
       SELECT
-      product_styles.id AS style_id,
-      name,
-      original_price,
-      sale_price,
-      default_style AS "default?",
+      products.id AS product_id,
       (
-        SELECT json_agg(photos_url)
+        SELECT json_agg(styles)
         FROM (
           SELECT
-          thumbnail_url,
-          url
-          FROM styles_photos
-          WHERE styles_photos.styleid = product_styles.id
-          ) AS photos_url
-      ) AS photos,
-      json_object_agg(styles_sku.id, json_build_object('quantity', styles_sku.quantity, 'size', styles_sku.size)) AS skus
-      FROM product_styles
-      JOIN styles_sku ON styles_sku.styleid = product_styles.id AND product_styles.productid = ${id}
-      GROUP BY product_styles.id
+          product_styles.id AS style_id,
+          name,
+          original_price,
+          sale_price,
+          default_style AS "default?",
+          (
+            SELECT json_agg(photos_url)
+            FROM (
+              SELECT
+              thumbnail_url,
+              url
+              FROM styles_photos
+              WHERE styles_photos.styleid = product_styles.id
+              ) AS photos_url
+          ) AS photos,
+          json_object_agg(styles_sku.id, json_build_object('quantity', styles_sku.quantity, 'size', styles_sku.size)) AS skus
+          FROM product_styles
+          JOIN styles_sku ON styles_sku.styleid = product_styles.id AND product_styles.productid = ${id}
+          GROUP BY product_styles.id
+        ) AS styles
+      ) AS results
+      FROM products
+      WHERE products.id = ${id}
       `)
       .then(res => {
         client.release()
-        console.log('CURRENT RESULTS: ', res.rows);
-        return res.rows;
+        return res.rows[0];
       })
       .catch(err => {
         client.release()
