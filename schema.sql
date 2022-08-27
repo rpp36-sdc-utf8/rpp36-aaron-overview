@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS product_styles (
   id int NOT NULL,
   productId int NOT NULL,
   name text,
-  sale_price text,
+  sale_price text NOT NULL DEFAULT '0',
   original_price text,
   default_style boolean,
   PRIMARY KEY (id),
