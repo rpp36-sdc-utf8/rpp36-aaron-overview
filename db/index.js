@@ -6,7 +6,7 @@ const pool = new Pool({
   database: 'overview'
 })
 // the pool will emit an error on behalf of any idle clients
-// it contains if a backend error or network partition happens
+// it contains if a backrelease error or network partition happens
 pool.on('error', (err, client) => {
   console.error('Unexpected error on idle client', err)
   process.exit(-1)
@@ -19,12 +19,12 @@ const getProducts = function() {
     return client
       .query('SELECT * FROM products limit 5')
       .then(res => {
-        client.release()
+        client.release();
         return res.rows;
       })
       .catch(err => {
-        client.release()
-        console.log(err.stack)
+        client.release();
+        console.log(err.stack);
       })
   })
 }
@@ -41,43 +41,15 @@ const getProductId = function(id) {
       GROUP BY products.id
       `)
       .then(res => {
-        client.release()
+        client.release();
         return res.rows[0];
       })
       .catch(err => {
-        client.release()
-        console.log(err.stack)
+        client.release();
+        console.log(err.stack);
       })
   })
 }
-
-/*
-      SELECT products.id AS product_id,
-      json_agg(
-        json_build_object(
-          'style_id', product_styles.id,
-          'name', product_styles.name,
-          'original_price', product_styles.original_price,
-          'sale_price', product_styles.sale_price,
-          'default?', product_styles.default_style
-          )
-        )
-      AS results
-      FROM products
-      JOIN product_styles ON products.id = ${id} AND product_styles.productid = products.id
-      JOIN styles_photos ON styles_photos.styleid = product_styles.id
-      GROUP BY products.id
-*/
-
-/*
-      SELECT product_styles.id AS style_id, name, original_price, sale_price, default_style AS "default?",
-      json_agg(json_build_object('thumbnail_url', styles_photos.thumbnail_url, 'url', styles_photos.url)) AS photos,
-      json_agg(json_build_object('feature', product_features.feature)) AS features
-      FROM product_styles
-      JOIN styles_photos ON product_styles.productid = ${id} AND styles_photos.styleid = product_styles.id
-      JOIN product_features ON product_styles.id = ${id} AND product_features.product_id = ${id}
-      GROUP BY product_styles.id
-*/
 
 const getProductStyles = function(id) {
   return pool
@@ -116,12 +88,12 @@ const getProductStyles = function(id) {
       WHERE products.id = ${id}
       `)
       .then(res => {
-        client.release()
+        client.release();
         return res.rows[0];
       })
       .catch(err => {
-        client.release()
-        console.log(err.stack)
+        client.release();
+        console.log(err.stack);
       })
   })
 }
@@ -133,12 +105,12 @@ const getFeatures = function(id) {
     return client
       .query(`SELECT * FROM product_features WHERE product_id = ${id} limit 5`)
       .then(res => {
-        client.release()
+        client.release();
         return res.rows;
       })
       .catch(err => {
-        client.release()
-        console.log(err.stack)
+        client.release();
+        console.log(err.stack);
       })
   })
 }
@@ -150,12 +122,12 @@ const getStyles = function(id) {
     return client
       .query(`SELECT * FROM product_styles WHERE productId = ${id}`)
       .then(res => {
-        client.release()
+        client.release();
         return res.rows;
       })
       .catch(err => {
-        client.release()
-        console.log(err.stack)
+        client.release();
+        console.log(err.stack);
       })
   })
 }
@@ -167,12 +139,12 @@ const getPhotos = function(id) {
     return client
       .query(`SELECT * FROM styles_photos WHERE styleId = ${id}`)
       .then(res => {
-        client.release()
+        client.release();
         return res.rows;
       })
       .catch(err => {
-        client.release()
-        console.log(err.stack)
+        client.release();
+        console.log(err.stack);
       })
   })
 }
@@ -184,17 +156,18 @@ const getSku = function(id) {
     return client
       .query(`SELECT * FROM styles_sku WHERE styleId = ${id}`)
       .then(res => {
-        client.release()
+        client.release();
         return res.rows;
       })
       .catch(err => {
-        client.release()
-        console.log(err.stack)
+        client.release();
+        console.log(err.stack);
       })
   })
 }
 
 module.exports = {
+  pool,
   getProducts,
   getProductId,
   getProductStyles,
