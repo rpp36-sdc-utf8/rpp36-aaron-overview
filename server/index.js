@@ -24,24 +24,24 @@ app.get('/products/:product_id/styles', (req, res) => {
   .then(result => res.send(result))
 })
 
-app.get('/features', (req, res) => {
-  db.getFeatures(1)
-  .then(result => res.send(result))
-})
+// app.get('/features', (req, res) => {
+//   db.getFeatures(1)
+//   .then(result => res.send(result))
+// })
 
-app.get('/styles', (req, res) => {
-  db.getStyles(1)
-  .then(result => res.send(result))
-})
+// app.get('/styles', (req, res) => {
+//   db.getStyles(1)
+//   .then(result => res.send(result))
+// })
 
-app.get('/photos', (req, res) => {
-  db.getPhotos(1)
-  .then(result => res.send(result))
-})
+// app.get('/photos', (req, res) => {
+//   db.getPhotos(1)
+//   .then(result => res.send(result))
+// })
 
-app.get('/sku', (req, res) => {
-  db.getSku(1)
-  .then(result => res.send(result))
-})
+// app.get('/sku', (req, res) => {
+//   db.getSku(1)
+//   .then(result => res.send(result))
+// })
 
 module.exports = app;
