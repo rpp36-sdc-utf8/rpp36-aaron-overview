@@ -2,6 +2,10 @@ const express = require('express');
 const db = require('../db/index.js');
 const app = express();
 
+app.get ('/loaderio-48905dca49dfb6fde03eaba18c33b56a.txt', (req, res) => {
+  res.sendFile(path.join(__dirname, 'loaderio.txt'))
+})
+
 app.get('/test', (req, res) => {
   res.send('this is working')
 })
